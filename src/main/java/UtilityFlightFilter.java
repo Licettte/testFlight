@@ -4,14 +4,19 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.function.Function;
 
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 
-public class FlightFilter implements Filter {
+public class UtilityFlightFilter {
+
+    private UtilityFlightFilter() {
+        throw new java.lang.UnsupportedOperationException("Utility class and cannot be instantiated");
+    }
+
     private static final List<TypeOfFilter> filterFirst = List.of(TypeOfFilter.FILTERFIRST);
+    private static final List<TypeOfFilter> filterSecond = List.of(TypeOfFilter.FILTERSECOND);
     private static final List<TypeOfFilter> filterFirstAndSecond = List.of(TypeOfFilter.FILTERFIRST, TypeOfFilter.FILTERSECOND);
     private static final List<TypeOfFilter> filterFirstAndSecondAndThird = List.of(TypeOfFilter.FILTERFIRST, TypeOfFilter.FILTERSECOND, TypeOfFilter.FILTERTHIRD);
 
@@ -19,51 +24,63 @@ public class FlightFilter implements Filter {
 
         ArrayList<TypeOfFilter> filters = new ArrayList<>(Arrays.asList(typeOfFilter));
 
-
         if (CollectionUtils.isEqualCollection(filters, filterFirst)) {
-            Set<Flight> departureTimeBeforeNow = getDepartureDateAfterCurrentTime(flights);
-            System.out.println("Filter applied: " + "\n"
-                    + "Segments with a departure date after the current time");
-            show(departureTimeBeforeNow);
+            Set<Flight> filter1 = getDepartureDateAfterCurrentTime(flights);
+            System.out.println("Filter applied: " +
+                    "\n" + "Segments with a departure date after the current time");
+            show(filter1);
         }
+        if (CollectionUtils.isEqualCollection(filters, filterSecond)) {
+            Set<Flight> filter2 = getArrivalDateEarlierDepartureDate(flights);
+            System.out.println("Filter applied: " +
+                    "\n" + "Segments with an arrival date earlier than the departure date");
+            show(filter2);
+        }
+
         if (CollectionUtils.isEqualCollection(filters, filterFirstAndSecond)) {
-            Set<Flight> flights2 = selectTwoFilter(flights);
-            if (flights2==null||flights2.equals("\"\"")) {
-                System.out.println("Filter applied: " + "\n" + "Segments with a departure date after the current time" + "\n" + "Segments with an arrival date earlier than the departure date");
-                show(flights2);
+            Set<Flight> filter1 = getArrivalDateEarlierDepartureDate(flights);
+            Set<Flight> filter2 = getArrivalDateEarlierDepartureDate(flights);
+            if (!filter2.isEmpty()) {
+                System.out.println("Filter applied: " + "\n" + "Segments with a departure date after the current time" +
+                        "\n" + "Segments with an arrival date earlier than the departure date");
+                show(filter2);
             } else System.out.println("Object not found");
         }
+            if (CollectionUtils.isEqualCollection(filters, filterFirstAndSecondAndThird)) {
+                Set<Flight> filter1 = getArrivalDateEarlierDepartureDate(flights);
+                Set<Flight> filter2 = getArrivalDateEarlierDepartureDate(flights);
+                Set<Flight> filter3 = getTransferTimeOverTwoHours(flights);
 
-        if (CollectionUtils.isEqualCollection(filters, filterFirstAndSecondAndThird)) {
-            Set<Flight> flights3 = selectThreeFilter(flights);
+                if (filter3 == null || filter3.equals("\"\"")) {
+                    System.out.println("Filter applied: " +
+                            "\n" + "Segments with a departure date after the current time" +
+                            "\n" + "Segments with an arrival date earlier than the departure date" +
+                            "\n" + "Transfer time over two hours");
+                    show(filter3);
+                } else System.out.println("Object not found");
+            }
 
-            if (flights3==null||flights3.equals("\"\"")) {
-                System.out.println("Filter applied: " + "\n"
-                        + "Segments with a departure date after the current time"
-                        + "\n" + "Segments with an arrival date earlier than the departure date" + "\n" + "Transfer time over two hours");
-                show(flights3);
-            } else System.out.println("Object not found");
         }
-    }
 
-    private static Set<Flight> selectTwoFilter(List<Flight> flights) {
-
-        Function<Set<Flight>, Set<Flight>> firstFilter = f -> getDepartureDateAfterCurrentTime(flights);
-        Set<Flight> apply1 = firstFilter.apply(new HashSet<>(flights));
-
-        Function<List<Flight>, Set<Flight>> secondFilter = f -> getArrivalDateEarlierDepartureDate(new ArrayList<>(apply1));
-
-        return secondFilter.apply(new ArrayList<>(apply1));
-    }
-
-    private static Set<Flight> selectThreeFilter(List<Flight> flights) {
-        Set<Flight> filterFirstAndSecond = selectTwoFilter(flights);
-
-        Function<List<Flight>, Set<Flight>> thirdFilter = f -> getTransferTimeOverTwoHours(new ArrayList<>(filterFirstAndSecond));
-
-        return thirdFilter.apply(flights);
-    }
-
+//    private static Set<Flight> selectTwoFilter(List<Flight> flights) {
+//
+//        Function<Set<Flight>, Set<Flight>> firstFilter = f -> getDepartureDateAfterCurrentTime(flights);
+//        Set<Flight> apply1 = firstFilter.apply(flights.stream().collect(Collectors.toSet()));
+//
+//        Function<List<Flight>, Set<Flight>> secondFilter = f -> getArrivalDateEarlierDepartureDate(new ArrayList<>(apply1));
+//
+//        Set<Flight> apply = secondFilter.apply(apply1.stream().collect(Collectors.toList()));
+//
+//        return apply;
+//    }
+//
+//    private static Set<Flight> selectThreeFilter(List<Flight> flights) {
+//        Set<Flight> filterFirstAndSecond = selectTwoFilter(flights);
+//
+//        Function<List<Flight>, Set<Flight>> thirdFilter = f -> getTransferTimeOverTwoHours(new ArrayList<>(filterFirstAndSecond));
+//
+//        return thirdFilter.apply(flights);
+//    }
 
     public static Set<Flight> getDepartureDateAfterCurrentTime(List<Flight> flights) {
 

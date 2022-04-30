@@ -5798,7 +5798,7 @@ instanceKlass sun/nio/fs/WindowsDirectoryStream$WindowsDirectoryIterator
 instanceKlass sun/nio/fs/WindowsDirectoryStream
 instanceKlass java/nio/file/DirectoryStream
 instanceKlass java/nio/file/Files$AcceptAllFilter
-instanceKlass java/nio/file/DirectoryStream$FlightFilter
+instanceKlass java/nio/file/DirectoryStream$UtilityFlightFilter
 instanceKlass java/net/NetworkInterface$2
 instanceKlass java/net/DefaultInterface
 instanceKlass java/net/Inet6Address$Inet6AddressHolder
