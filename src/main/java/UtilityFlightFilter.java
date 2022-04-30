@@ -82,7 +82,7 @@ public class UtilityFlightFilter {
 //        return thirdFilter.apply(flights);
 //    }
 
-    public static Set<Flight> getDepartureDateAfterCurrentTime(List<Flight> flights) {
+    private static Set<Flight> getDepartureDateAfterCurrentTime(List<Flight> flights) {
 
         LocalDateTime localDateTime = LocalDateTime.now(ZoneOffset.UTC);
 
@@ -99,7 +99,7 @@ public class UtilityFlightFilter {
         return sortFlight;
     }
 
-    public static Set<Flight> getArrivalDateEarlierDepartureDate(List<Flight> flights) {
+    private static Set<Flight> getArrivalDateEarlierDepartureDate(List<Flight> flights) {
 
         List<Segment> sortSegments = flights.stream()
                 .flatMap(s -> s.getSegments().stream())
@@ -114,7 +114,7 @@ public class UtilityFlightFilter {
         return sortFlight;
     }
 
-    public static Set<Flight> getTransferTimeOverTwoHours(List<Flight> flights) {
+    private static Set<Flight> getTransferTimeOverTwoHours(List<Flight> flights) {
 
         List<Segment> sortSegments = flights.stream()
                 .flatMap(s -> s.getSegments().stream())
