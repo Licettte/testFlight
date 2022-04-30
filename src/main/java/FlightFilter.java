@@ -27,10 +27,8 @@ public class FlightFilter implements Filter {
             show(departureTimeBeforeNow);
         }
         if (CollectionUtils.isEqualCollection(filters, filterFirstAndSecond)) {
-            Set<Flight> getArrivalDateEarlierDepartureDate = selectThreeFilter(flights);
-
             Set<Flight> flights2 = selectTwoFilter(flights);
-            if (flights2 != null) {
+            if (flights2==null||flights2.equals("\"\"")) {
                 System.out.println("Filter applied: " + "\n" + "Segments with a departure date after the current time" + "\n" + "Segments with an arrival date earlier than the departure date");
                 show(flights2);
             } else System.out.println("Object not found");
@@ -39,7 +37,7 @@ public class FlightFilter implements Filter {
         if (CollectionUtils.isEqualCollection(filters, filterFirstAndSecondAndThird)) {
             Set<Flight> flights3 = selectThreeFilter(flights);
 
-            if (!flights3.isEmpty()) {
+            if (flights3==null||flights3.equals("\"\"")) {
                 System.out.println("Filter applied: " + "\n"
                         + "Segments with a departure date after the current time"
                         + "\n" + "Segments with an arrival date earlier than the departure date" + "\n" + "Transfer time over two hours");
