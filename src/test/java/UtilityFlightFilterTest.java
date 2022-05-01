@@ -19,11 +19,11 @@ class UtilityFlightFilterTest {
 
         boolean actual1 = actual.stream().flatMap(a -> a.getSegments().stream())
                 .collect(toList())
-                .stream().anyMatch(d -> d.getDepartureDate().isEqual(dateDeparture));
+                .stream().allMatch(d -> d.getDepartureDate().isEqual(dateDeparture));
 
         boolean actual2 = actual.stream().flatMap(a -> a.getSegments().stream())
                 .collect(toList())
-                .stream().anyMatch(d -> d.getArrivalDate().isEqual(dateArrival));
+                .stream().allMatch(d -> d.getArrivalDate().isEqual(dateArrival));
 
         assertTrue(actual1 && actual2);
     }
