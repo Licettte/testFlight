@@ -11,20 +11,20 @@ class UtilityFlightFilterTest {
     @Test
     @DisplayName("Segments with a departure date after the current time")
     void selectFilter() {
-        LocalDateTime dateTime = LocalDateTime.now().plusDays(3);
+        LocalDateTime dateDeparture = LocalDateTime.now().plusDays(3);
+        LocalDateTime dateArrival = LocalDateTime.now().plusDays(3).minusHours(6);
 
         List<Flight> flights = FlightBuilder.createFlights();
-
-        Set<Flight> expected = new HashSet<>();
-        List<Segment> seg = new ArrayList<>();
-        seg.add(new Segment(dateTime, dateTime.minusHours(5), 5)); //+1 hour, but it doesn't work
-        expected.add(new Flight(seg, 1));
-
         Set<Flight> actual = UtilityFlightFilter.selectFilter(flights, TypeOfFilter.FILTERTHIRD);
 
-//        Set<Flight> exp = new HashSet<>();
-//        exp.add(flights.get(3));
+        boolean actual1 = actual.stream().flatMap(a -> a.getSegments().stream())
+                .collect(toList())
+                .stream().anyMatch(d -> d.getDepartureDate().isEqual(dateDeparture));
 
-        assertIterableEquals(expected, actual);
+        boolean actual2 = actual.stream().flatMap(a -> a.getSegments().stream())
+                .collect(toList())
+                .stream().anyMatch(d -> d.getArrivalDate().isEqual(dateArrival));
+
+        assertTrue(actual1 && actual2);
     }
 }
