@@ -25,6 +25,15 @@ class UtilityFlightFilterTest {
                 .collect(toList())
                 .stream().allMatch(d -> d.getArrivalDate().isEqual(dateArrival));
 
-        assertTrue(actual1 && actual2);
+//         assertTrue(actual1 && actual2);
+        
+        Set<LocalDateTime> printActual = actual.stream().map(a -> a.getSegments().get(0).getArrivalDate()).collect(Collectors.toSet());
+        Set<LocalDateTime> printActual1 = actual.stream().map(a -> a.getSegments().get(0).getDepartureDate()).collect(Collectors.toSet());
+
+        assertTrue(actual2, String.join(", ", String.format("%nExpected Arrival time:%s%n%nActual Arrival time:%s%n%n",
+                 "[" + dateArrival + "]",  printActual)));
+
+        assertTrue(actual1, String.join(", ", String.format("%nExpected Departure time:%s%n%nActual Departure time:%s%n%n",
+                "[" + dateDeparture + "]", printActual1)));
     }
 }
