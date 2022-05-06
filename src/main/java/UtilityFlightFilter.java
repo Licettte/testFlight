@@ -9,7 +9,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
 
-public class UtilityFlightFilter {
+public final class UtilityFlightFilter {
 
     private UtilityFlightFilter() {
         throw new java.lang.UnsupportedOperationException("Utility class and cannot be instantiated");
